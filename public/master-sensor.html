@@ -62,13 +62,45 @@
   </body>
 </html>
 <script>
+	var loadSensorDataForMonth = function(month, $scope, $http){
+		$http.get("/loadsensordata?sensorId=MSTRM_SENSOR&month="  + month)
+		.then(function(response) {
+			$scope.sendordata = response.data;
+		});
+	}
+	
+	var loadSensorDataForMonthAndDay = function(month, day, $scope, $http){
+		$http.get("/loadsensordata?sensorId=MSTRM_SENSOR&month="  + month + '&day=' + day)
+		.then(function(response) {
+			$scope.sendordata = response.data;
+		});
+	}
 	var sensor = angular.module('sensorApp', []);	
 	sensor.directive('bodypage', function($compile) {
 		var directive = {};
 		directive.restrict = 'E';
 		directive.templateUrl = "/resources/templates/data-table.html";		
 		directive.controller = function($scope, $rootScope, $http) {
+			$scope.message = 'Master Room Data';
+			$scope.daylist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+			var month = '';
+			var day = '';
 			
+			$scope.selectMonth = function(){
+				month = $scope.monthValue;
+			}
+			
+			$scope.selectDay = function(){
+				day = $scope.dayValue;
+			}
+			
+			$scope.searchSensorData = function(){
+				if('' != month && '' != day){
+					loadSensorDataForMonthAndDay(month, day, $scope, $http);
+				} else if('' != month && '' == day){
+					loadSensorDataForMonth(month, day, $scope, $http);
+				}
+			}		
 		};
 		return directive;
 	});

@@ -5,7 +5,7 @@
 var express      = require("express");
 var app          = express();
 var logger       = require("logging_component");
-
+var url          = require("url");
 /*
 	MongoDB Based Security 
 */
@@ -73,6 +73,31 @@ var userValidatoin = function(user, callBackMethods){
 	});
 }
 
+
+var loadsensordata = function(criteria, callBackMethods){
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
+		db.collection('sensordata').find( criteria ).toArray(function(err, result) {
+			db.close();
+			if (err) 
+				callBackMethods.failure();
+			else
+				callBackMethods.success(result)
+		});
+	});
+}
+
+var aggregatedata = function(criteria, callBackMethods){
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
+		db.collection('sensordata').aggregate( criteria ).toArray(function(err, result) {
+			db.close();
+			if (err) 
+				callBackMethods.failure();
+			else
+				callBackMethods.success(result)
+		});
+	});
+}
+
 /*
 	Get Method not Allowed for authentication
 */
@@ -122,18 +147,58 @@ app.get("/guest", function(req,res){
 	else res.sendFile(path + "guest-sensor.html");
 });
 
-app.get("/chart1", function(req,res){
+app.get("/charts", function(req,res){
 	if(req.session.userId == undefined)
 		res.redirect('/login');
-	else res.sendFile(path + "chart1.html");
+	else res.sendFile(path + "charts.html");
 });
 
-app.get("/chart2", function(req,res){
-	if(req.session.userId == undefined)
-		res.redirect('/login');
-	else res.sendFile(path + "chart2.html");
+app.get("/loadsensordata", function(req,res){
+	var urlstring = url.parse(req.url, true);
+	var query = urlstring.query;
+	if(req.session.userId != undefined && '' != query.sensorId){
+		var searchCriteria = {};
+		searchCriteria.sensorId = query.sensorId;
+		
+		if(null != query.month && '' != query.month ){
+			searchCriteria.month = JSON.parse(query.month);
+			if(null != query.day && '' != query.day){
+				searchCriteria.day = JSON.parse(query.day);
+			}
+		}
+		logger.log(JSON.stringify(searchCriteria));
+	    loadsensordata( searchCriteria , { 
+				success: function(rows){
+					res.json(rows);
+				}, 
+				failure: function(){
+					res.json({});
+				}
+			}
+		);
+	} else res.json({});
 });
 
+app.get("/loadradarchart", function(req,res){
+	if(req.session.userId != undefined){
+	    aggregatedata( [{ 
+			     $group : { 
+					"_id" : "$sensorId",  
+				    "count" : {  
+						$sum : 1  
+					} 
+				}	
+			}] , { 
+				success: function(chart){
+					res.json(chart);
+				}, 
+				failure: function(){
+					res.json({});
+				}
+			}
+		);
+	} else res.json({});
+});
 
 app.get("/getuser", function(req,res){
 	logger.log('req.session.userId = '+ req.session.userId);
@@ -141,13 +206,6 @@ app.get("/getuser", function(req,res){
 		res.json({'name': req.session.name});
 	else res.json({});
 });
-
-app.get("/getdata", function(req,res){
-	if(null != req.session.userId || 'undefined' != req.session.userId){
-		res.json({});
-	} else res.json({});
-});
-
 
 /*
   Server Start up 

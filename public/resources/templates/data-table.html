@@ -1,6 +1,40 @@
 <div class="row">
 	<div class="col-lg-12">
-		<h1 class="page-header">Data</h1>
+		<h1 class="page-header">{{message}}</h1>
+		Month: 
+		<select ng-change="selectMonth()"  ng-model="monthValue" style="background-color:#F0A673;">
+			<option value=''>--Select--</option>
+			<option value='0'>January</option>
+			<option value='1'>February</option>
+		</select>
+		Day: 
+		<select ng-change="selectDay()"  ng-model="dayValue" style="background-color:#F0A673;">
+			<option ng-repeat="day in daylist" value="{{day}}">{{day}}</option>	
+		</select>&nbsp;
+		<button type="button" class="btn btn-success" ng-click="searchSensorData()">Search</button>
 	</div>
-	<!-- /.col-lg-12 -->
+	<div class="btn-xs">  
+	  <table class="table">
+		<thead>
+		  <tr>
+			<th>Id</th>
+			<th>Month</th>
+			<th>Day</th>
+			<th>Hour</th>
+			<th>Minute</th>
+			<th>Second</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr ng-repeat="row in sendordata">
+			<td>{{row.id}}</td>
+			<td>{{row.month}}</td>
+			<td>{{row.day}}</td>
+			<td>{{row.hour}}</td>
+			<td>{{row.minute}}</td>
+			<td>{{row.second}}</td>
+		  </tr>		  
+		</tbody>
+	  </table>	
+	</div>  
 </div>
