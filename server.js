@@ -86,6 +86,18 @@ var loadsensordata = function(criteria, callBackMethods){
 	});
 }
 
+var loadprocesseddata = function(criteria, callBackMethods){
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase" , function(err, db) {
+		db.collection(callBackMethods.tableName).find( criteria ).toArray(function(err, result) {
+			db.close();
+			if (err) 
+				callBackMethods.failure();
+			else
+				callBackMethods.success(result)
+		});
+	});
+}
+
 var aggregatedata = function(criteria, callBackMethods){
 	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
 		db.collection('sensordata').aggregate( criteria ).toArray(function(err, result) {
@@ -97,6 +109,91 @@ var aggregatedata = function(criteria, callBackMethods){
 		});
 	});
 }
+
+var processhalldata = function(){
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
+		var _mapper = function(){
+			var milis = Date.parse(this.timestamp);
+			var date = new Date(milis);
+			var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+			emit(daysOfWeek[date.getDay()], 1);
+		}
+		
+		var _reducer = function(key, values){		
+			return values.length;
+		}	
+		var sensordata = db.collection('sensordata');
+		sensordata.mapReduce(
+			_mapper, 
+			_reducer, 
+			{ 
+			  query  : { sensorId : 'HALL_SENSOR'},
+			  out    : { replace : "processeddata_hall_sensor" }
+			}, function(err, results, stats){
+				return;
+			}
+			
+		);	
+		db.close();
+	});			
+}
+
+var processmstrmdata = function(){
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
+		var _mapper = function(){
+			var milis = Date.parse(this.timestamp);
+			var date = new Date(milis);
+			var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+			emit(daysOfWeek[date.getDay()], 1);
+		}
+		
+		var _reducer = function(key, values){		
+			return values.length;
+		}	
+		var sensordata = db.collection('sensordata');
+		sensordata.mapReduce(
+			_mapper, 
+			_reducer, 
+			{ 
+			  query  : { sensorId : 'MSTRM_SENSOR'},
+			  out    : { replace : "processeddata_mstrm_sensor" }
+			}, function(err, results, stats){
+				return;
+			}
+			
+		);	
+		db.close();
+	});			
+}
+
+var processgstrmdata = function(){
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
+		var _mapper = function(){
+			var milis = Date.parse(this.timestamp);
+			var date = new Date(milis);
+			var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+			emit(daysOfWeek[date.getDay()], 1);
+		}
+		
+		var _reducer = function(key, values){		
+			return values.length;
+		}	
+		var sensordata = db.collection('sensordata');
+		sensordata.mapReduce(
+			_mapper, 
+			_reducer, 
+			{ 
+			  query  : { sensorId : 'GSTRM_SENSOR'},
+			  out    : { replace : "processeddata_gstrm_sensor" }
+			}, function(err, results, stats){
+				return;
+			}
+			
+		);	
+		db.close();
+	});			
+}
+
 
 /*
 	Get Method not Allowed for authentication
@@ -153,6 +250,20 @@ app.get("/charts", function(req,res){
 	else res.sendFile(path + "charts.html");
 });
 
+
+app.get("/processdata", function(req,res){
+	if(req.session.userId == undefined)
+		res.redirect('/login');
+	else {
+		processhalldata();
+		processmstrmdata();
+		processgstrmdata();
+		
+		res.sendFile(path + "charts.html");
+	}
+});
+
+
 app.get("/loadsensordata", function(req,res){
 	var urlstring = url.parse(req.url, true);
 	var query = urlstring.query;
@@ -168,16 +279,16 @@ app.get("/loadsensordata", function(req,res){
 		}
 		logger.log(JSON.stringify(searchCriteria));
 	    loadsensordata( searchCriteria , { 
-				success: function(rows){
-					res.json(rows);
-				}, 
-				failure: function(){
-					res.json({});
-				}
+			success: function(rows){
+				res.json(rows);
+			}, 
+			failure: function(){
+				res.json({});
 			}
-		);
+		});
 	} else res.json({});
 });
+
 
 app.get("/loadradarchart", function(req,res){
 	if(req.session.userId != undefined){
@@ -197,6 +308,31 @@ app.get("/loadradarchart", function(req,res){
 				}
 			}
 		);
+	} else res.json({});
+});
+
+
+app.get("/loadcharts", function(req,res){
+	var urlstring = url.parse(req.url, true);
+	var query = urlstring.query;
+	if(req.session.userId != undefined && '' != query.sensorId){
+		var tableName = '';
+		if(query.sensorId == 'HALL_SENSOR'){
+			tableName = 'processeddata_hall_sensor';
+		} else if(query.sensorId == 'MSTRM_SENSOR'){
+			tableName = 'processeddata_mstrm_sensor';
+		} else if(query.sensorId == 'GSTRM_SENSOR'){
+			tableName = 'processeddata_gstrm_sensor';
+		}
+	    loadprocesseddata( {} , { 
+		  tableName: tableName,
+			success: function(rows){
+				res.json(rows);
+			}, 
+			failure: function(){
+				res.json({});
+			}
+		});
 	} else res.json({});
 });
 
