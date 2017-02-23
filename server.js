@@ -65,7 +65,7 @@ var userValidatoin = function(user, callBackMethods){
 	MongoClient.connect("mongodb://localhost:27017/userdata", function(err, db) {
 		db.collection('users').findOne( user, function(err, result) {
 			db.close();
-			if (err) 
+			if (err || null == result || null == result.userId) 
 				callBackMethods.failure();
 			else
 				callBackMethods.success(result)
