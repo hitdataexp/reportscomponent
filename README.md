@@ -7,7 +7,7 @@
 		<p>
 		  This is a ECE Senior project on IoT and data analytics. The experiment intends to give an analytical synthesis of human behavior in a given space and time.
 		  <br/>
-		<h3>Software</h3>
+		<h3>Software/Frameworks Used</h3>
 		<p>
 			<ul>
 				<li>Mongo DB</li>
