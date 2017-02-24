@@ -7,6 +7,18 @@
 		<p>
 		  This is a ECE Senior project on IoT and data analytics. The experiment intends to give an analytical synthesis of human behavior in a given space and time.
 		  <br/>
+		<h3>Software</h3>
+		<p>
+			<ul>
+				<li>Mongo DB</li>
+				<li>MongoChef IDE</li>
+				<li>NPM</li>
+				<li>Node Js</li>
+				<li>Angular Js</li>
+				<li>Bootstrap</li>
+				<li>AM Charts</li>
+			</ul>
+		</p>		  
 		  The project holds 3 major stages.
 		  <ol>
 			<li><strong>Data Collection</strong>
@@ -153,18 +165,6 @@
 					</li>		
 				</ul>
 		  </ol>	  
-		</p>
-		<h3>Software</h3>
-		<p>
-			<ul>
-				<li>Mongo DB</li>
-				<li>MongoChef IDE</li>
-				<li>NPM</li>
-				<li>Node Js</li>
-				<li>Angular Js</li>
-				<li>Bootstrap</li>
-				<li>AM Charts</li>
-			</ul>
 		</p>
 	</div>
 </div>
