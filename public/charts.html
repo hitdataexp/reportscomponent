@@ -42,17 +42,17 @@
 	}			
 	#hall-chart {
 		width		: 100%;
-		height		: 200px;
+		height		: 300px;
 		font-size	: 11px;
 	}	
 	#mstrm-chart {
 		width		: 100%;
-		height		: 200px;
+		height		: 300px;
 		font-size	: 11px;
 	}		
 	#gstrm-chart {
 		width		: 100%;
-		height		: 200px;
+		height		: 300px;
 		font-size	: 11px;
 	}		
 	</style>
@@ -67,14 +67,18 @@
 		<div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Charts</h1>
+                    <h3 class="page-header">Occupancy Per Day</h3>
+					<span>
+						This is a pre-processed data. Please click 
+						<button type="button" class="btn btn-success btn-xs" onClick="window.location='processdata'">Process Data</button> to get the latest reports.
+					</span>
                 </div>
-            </div>	
+            </div><br/>	
 			<div class="row">
                 <div class="col-lg-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Hall Weekly View
+                            Hall
                         </div>
                         <div class="panel-body">
                             <div id="hall-chart"></div>
@@ -84,7 +88,7 @@
                 <div class="col-lg-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Master Room Weekly View
+                            Master Room
                         </div>
                         <div class="panel-body">
                             <div id="mstrm-chart"></div>
@@ -94,7 +98,7 @@
                 <div class="col-lg-6">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Guest Room Weekly View
+                            Guest Room
                         </div>
                         <div class="panel-body">
                             <div id="gstrm-chart"></div>
@@ -126,7 +130,7 @@
     <script src="/resources/bootstrap/vendor/metisMenu/metisMenu.min.js"></script>
 
 	<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-	<script src="https://www.amcharts.com/lib/3/pie.js"></script>
+	<script src="https://www.amcharts.com/lib/3/serial.js"></script>
 	<script src="https://www.amcharts.com/lib/3/radar.js"></script>
 	<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 	<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>	
@@ -167,18 +171,30 @@
 		$http.get("/loadcharts?sensorId=HALL_SENSOR")
 			.then(function(response) {
 				var chart = AmCharts.makeChart( "hall-chart", {
-				  "type": "pie",
-				  "theme": "light",
-				  "dataProvider": response.data,
-				  "titleField": "_id",
-				  "valueField": "value",
-				  "labelRadius": 5,
-				  "radius": "42%",
-				  "innerRadius": "60%",
-				  "labelText": "[[id]]",
-				  "export": {
-					"enabled": false
-				  }
+					"theme": "light",
+					"type": "serial",
+					"dataProvider": response.data,
+					"valueAxes": [{
+						"title": "Occupency per Day in Master Room"
+					}],
+					"graphs": [{
+						"balloonText": "Occupency on [[category]]:[[value]]",
+						"fillAlphas": 1,
+						"lineAlpha": 0.2,
+						"title": "Day",
+						"type": "column",
+						"valueField": "value"
+					}],
+					"rotate": false,
+					"categoryField": "_id",
+					"categoryAxis": {
+						"gridPosition": "start",
+						"fillAlpha": 0.05,
+						"position": "left",
+					},
+					"export": {
+						"enabled": false
+					 }
 				});
 		});
 	}
@@ -187,18 +203,30 @@
 		$http.get("/loadcharts?sensorId=MSTRM_SENSOR")
 			.then(function(response) {
 				var chart = AmCharts.makeChart( "mstrm-chart", {
-				  "type": "pie",
-				  "theme": "light",
-				  "dataProvider": response.data,
-				  "titleField": "_id",
-				  "valueField": "value",
-				  "labelRadius": 5,
-				  "radius": "42%",
-				  "innerRadius": "60%",
-				  "labelText": "[[id]]",
-				  "export": {
-					"enabled": false
-				  }
+					"theme": "light",
+					"type": "serial",
+					"dataProvider": response.data,
+					"valueAxes": [{
+						"title": "Occupency per Day in Master Room"
+					}],
+					"graphs": [{
+						"balloonText": "Occupency on [[category]]:[[value]]",
+						"fillAlphas": 1,
+						"lineAlpha": 0.2,
+						"title": "Day",
+						"type": "column",
+						"valueField": "value"
+					}],
+					"rotate": false,
+					"categoryField": "_id",
+					"categoryAxis": {
+						"gridPosition": "start",
+						"fillAlpha": 0.05,
+						"position": "left",
+					},
+					"export": {
+						"enabled": false
+					 }
 				});
 		});
 	}	
@@ -207,18 +235,30 @@
 		$http.get("/loadcharts?sensorId=GSTRM_SENSOR")
 			.then(function(response) {
 				var chart = AmCharts.makeChart( "gstrm-chart", {
-				  "type": "pie",
-				  "theme": "light",
-				  "dataProvider": response.data,
-				  "titleField": "_id",
-				  "valueField": "value",
-				  "labelRadius": 5,
-				  "radius": "42%",
-				  "innerRadius": "60%",
-				  "labelText": "[[id]]",
-				  "export": {
-					"enabled": false
-				  }
+					"theme": "light",
+					"type": "serial",
+					"dataProvider": response.data,
+					"valueAxes": [{
+						"title": "Occupency per Day in Master Room"
+					}],
+					"graphs": [{
+						"balloonText": "Occupency on [[category]]:[[value]]",
+						"fillAlphas": 1,
+						"lineAlpha": 0.2,
+						"title": "Day",
+						"type": "column",
+						"valueField": "value"
+					}],
+					"rotate": false,
+					"categoryField": "_id",
+					"categoryAxis": {
+						"gridPosition": "start",
+						"fillAlpha": 0.05,
+						"position": "left",
+					},
+					"export": {
+						"enabled": false
+					 }
 				});
 		});
 	}	
