@@ -25,21 +25,15 @@
 		<thead>
 		  <tr>
 			<th>Id</th>
-			<th>Month</th>
-			<th>Day</th>
-			<th>Hour</th>
-			<th>Minute</th>
-			<th>Second</th>
+			<th>Sensor</th>
+			<th>Date/Time</th>
 		  </tr>
 		</thead>
 		<tbody>
-		  <tr ng-repeat="row in sendordata">
+		  <tr ng-repeat="row in sendordata" class="info">
 			<td>{{row.id}}</td>
-			<td>{{row.month}}</td>
-			<td>{{row.day}}</td>
-			<td>{{row.hour}}</td>
-			<td>{{row.minute}}</td>
-			<td>{{row.second}}</td>
+			<td>{{row.sensorId}}</td>
+			<td><i>{{row.timestamp}}</i></td>
 		  </tr>		  
 		</tbody>
 	  </table>	
