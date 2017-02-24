@@ -133,7 +133,7 @@
 	<script src="https://www.amcharts.com/lib/3/serial.js"></script>
 	<script src="https://www.amcharts.com/lib/3/radar.js"></script>
 	<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
-	<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>	
+	<script src="https://www.amcharts.com/lib/3/themes/patterns.js"></script>
 
 	<!-- Custom Theme JavaScript -->
     <script src="/resources/bootstrap/dist/js/sb-admin-2.js"></script>
@@ -145,7 +145,7 @@
 			.then(function(response) {
 			var chart = AmCharts.makeChart( "radar-chart-plot", {
 			  "type": "radar",
-			  "theme": "light",
+			  "theme": "patterns",
 			  "dataProvider": response.data,
 			  "valueAxes": [ {
 				"axisTitleOffset": 20,
@@ -171,7 +171,7 @@
 		$http.get("/loadcharts?sensorId=HALL_SENSOR")
 			.then(function(response) {
 				var chart = AmCharts.makeChart( "hall-chart", {
-					"theme": "light",
+					"theme": "patterns",
 					"type": "serial",
 					"dataProvider": response.data,
 					"valueAxes": [{
@@ -203,7 +203,7 @@
 		$http.get("/loadcharts?sensorId=MSTRM_SENSOR")
 			.then(function(response) {
 				var chart = AmCharts.makeChart( "mstrm-chart", {
-					"theme": "light",
+					"theme": "patterns",
 					"type": "serial",
 					"dataProvider": response.data,
 					"valueAxes": [{
@@ -235,7 +235,7 @@
 		$http.get("/loadcharts?sensorId=GSTRM_SENSOR")
 			.then(function(response) {
 				var chart = AmCharts.makeChart( "gstrm-chart", {
-					"theme": "light",
+					"theme": "patterns",
 					"type": "serial",
 					"dataProvider": response.data,
 					"valueAxes": [{
