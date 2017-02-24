@@ -1,6 +1,6 @@
 <div>
 	<div>
-		<h1>Urban Space Occupancy Analysis</h1>
+		<h1>Urban Space Occupancy Analysis - Reports</h1>
 	</div>
 	<div>	
 		<h3>Overview</h3>
