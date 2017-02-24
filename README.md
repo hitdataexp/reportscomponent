@@ -154,28 +154,16 @@
 				</ul>
 		  </ol>	  
 		</p>
-		<h3>Hardware</h3>
-		<p>
-			<ul>
-				<li>Motion Sensors (3)</li>
-				<li>Raspberry Pi 3 - Model B (1)</li>
-				<li>24 Volt Power Supply</li>
-				<li>Network Cable </li>
-				<li>Router</li>
-				<li>PC</li>
-			</ul>
-		</p>
 		<h3>Software</h3>
 		<p>
 			<ul>
-				<li>Rasbian Ubuntu OS</li>
-				<li>Java 7</li>
-				<li>Eclipse IDE</li>
-				<li>Tomcat Application Server 7</li>
 				<li>Mongo DB</li>
 				<li>MongoChef IDE</li>
 				<li>NPM</li>
 				<li>Node Js</li>
+				<li>Angular Js</li>
+				<li>Bootstrap</li>
+				<li>AM Charts</li>
 			</ul>
 		</p>
 	</div>
