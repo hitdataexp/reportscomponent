@@ -13,7 +13,7 @@ var bodyParser   = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session      = require('express-session');
 var MongoStore   = require('connect-mongo')(session);
-var MongoClient = require('mongodb').MongoClient;
+var MongoClient  = require('mongodb').MongoClient;
 app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -60,6 +60,37 @@ app.get("/home", function(req,res){
 app.get("/logout", function(req,res){
 	res.redirect('/login');
 });
+
+
+/*
+	REST API Access from Raspberry
+*/
+
+var getSequence = function(callBackMethods){
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
+		db.collection('sensordata').find({}).toArray(function(err, result) {
+			db.close();
+			if (err) 
+				callBackMethods.failure();
+			else
+				callBackMethods.success(result.length)
+		});
+	});
+}
+
+var insertSensorData = function(data, callBackMethods){
+	console.log(data.id)
+	MongoClient.connect("mongodb://localhost:27017/sensordatabase", function(err, db) {
+		db.collection('sensordata').insert(data, function(err, result) {
+			db.close();
+			if (err) 
+				callBackMethods.failure();
+			else
+				callBackMethods.success(result)
+		});
+	});
+}
+
 
 var userValidatoin = function(user, callBackMethods){
 	MongoClient.connect("mongodb://localhost:27017/userdata", function(err, db) {
@@ -343,15 +374,87 @@ app.get("/getuser", function(req,res){
 	else res.json({});
 });
 
+
+/*
+	REST API for external Access
+*/
+
+app.post("/insertdata", function(req, res){
+	logger.log('1. insertdata Triggered');
+	if(null != req.body.userId && null != req.body.password && '' != req.body.userId && '' != req.body.password){
+		logger.log('2. Validating User');
+	    userValidatoin( {
+		        //User Entered Information
+				  userId: req.body.userId, 
+				password: req.body.password
+			}, { 
+				//If Valid User Call 
+				success: function(validUserStatus){
+					logger.log('3. Getting Next Number');
+					getSequence({
+						success: function(nextNumber){
+							logger.log('4. Prepare Data');
+							var data = {
+								id: (nextNumber + 1)
+							};
+							if(null != req.body.sensorId && '' != req.body.sensorId){
+								data['sensorId'] = req.body.sensorId;
+							}
+							if(null != req.body.month && '' != req.body.month){
+								data['month'] = Number(req.body.month);
+							}
+							if(null != req.body.day && '' != req.body.day){
+								data['day'] = Number(req.body.day);
+							}
+							if(null != req.body.hour && '' != req.body.hour){
+								data['hour'] = Number(req.body.hour);
+							}
+							if(null != req.body.minute && '' != req.body.minute){
+								data['minute'] = Number(req.body.minute);
+							}
+							if(null != req.body.second && '' != req.body.second){
+								data['second'] = Number(req.body.second);
+							}
+							data['timestamp'] = new Date();
+							
+							insertSensorData(data, {
+								success: function(insertStatus){
+									logger.log('5. Inserted Data - ' + insertStatus);
+									res.json({status: true});
+								},
+								failure: function(){
+									logger.log('5. Inserted Data Failure');
+									res.json({status: false});
+								}
+							});
+						}, 
+						failure: function(){
+							logger.log('3. Getting Next Number Failure');
+							res.json({status: false});
+						}
+					});
+				}, 
+				//If In-Valid User Call 
+				failure: function(){
+					logger.log('2. User Validation Failed');
+					res.json({status: false});
+				}
+			}
+		);
+	} else {
+		res.json({});
+	}
+});
+
 /*
   Server Start up 
   Default Port: 3003
 */
-app.listen(process.env.PORT || 3003, () => {				
+app.listen(process.env.PORT || 3001, () => {				
 	logger.log('##################################################');
 	logger.log('        hitdataexp/reportscomponent');
 	logger.log('        Process Port :' + process.env.PORT);
-	logger.log('        Local Port   :' + 3003);
+	logger.log('        Local Port   :' + 3001);
 	logger.log('##################################################');
 });	
 
