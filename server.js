@@ -394,22 +394,29 @@ app.post("/insertdata", function(req, res){
 					getSequence({
 						success: function(nextNumber){
 							logger.log('4. Prepare Data');
-							var _date = new Date();
 							var data = {
-								id        : (nextNumber + 1),
-								sensorId  : null,
-								month     : _date.getMonth(),
-								day       : _date.getDate(),
-								hour      : _date.getHours(),
-								minute    : _date.getMinutes(),
-								second    : _date.getSeconds(),
-								timestamp : _date
+								id: (nextNumber + 1)
 							};
-							
 							if(null != req.body.sensorId && '' != req.body.sensorId){
 								data['sensorId'] = req.body.sensorId;
 							}
-														
+							if(null != req.body.month && '' != req.body.month){
+								data['month'] = Number(req.body.month);
+							}
+							if(null != req.body.day && '' != req.body.day){
+								data['day'] = Number(req.body.day);
+							}
+							if(null != req.body.hour && '' != req.body.hour){
+								data['hour'] = Number(req.body.hour);
+							}
+							if(null != req.body.minute && '' != req.body.minute){
+								data['minute'] = Number(req.body.minute);
+							}
+							if(null != req.body.second && '' != req.body.second){
+								data['second'] = Number(req.body.second);
+							}
+							data['timestamp'] = new Date();
+							
 							insertSensorData(data, {
 								success: function(insertStatus){
 									logger.log('5. Inserted Data - ' + insertStatus);
