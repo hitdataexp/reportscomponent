@@ -7,10 +7,10 @@
   "dependencies": {
     "express": "latest",
     "url": "latest",
-    "body-parser",
-    "bcookie-parser",
-    "express-session",
-    "connect-mongo",
-    "mongodb"
+    "body-parser": "latest",
+    "bcookie-parser": "latest",
+    "express-session": "latest",
+    "connect-mongo": "latest",
+    "mongodb": "latest"
   }
 }
