@@ -5,12 +5,6 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "latest",
-    "url": "latest",
-    "body-parser": "latest",
-    "bcookie-parser": "latest",
-    "express-session": "latest",
-    "connect-mongo": "latest",
-    "mongodb": "latest"
+    "express": "latest"
   }
 }
