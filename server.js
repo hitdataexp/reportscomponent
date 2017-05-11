@@ -23,8 +23,8 @@ app.use(cookieParser());
 var mongoose = require('mongoose');
 
 var mongoDBDetails = {
-   _MONGO_UID: process.env.UID || '',
-   _MONGO_PWD: process.env.PWD || ''
+   _MONGO_UID: process.env.MLAB_MONGO_UID || '',
+   _MONGO_PWD: process.env.MLAB_MONGO_PWD || ''
 }
 
 mongoose.connect('mongodb://' + mongoDBDetails._MONGO_UID + ':' + mongoDBDetails._MONGO_PWD + '@ds133251.mlab.com:33251/hitdataexpsession');
