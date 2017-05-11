@@ -23,11 +23,11 @@ app.use(cookieParser());
 var mongoose = require('mongoose');
 
 var mongoDBDetails = {
-   UID: process.env.UID || '',
-   PWD: process.env.PWD || ''
+   _MONGO_UID: process.env.UID || '',
+   _MONGO_PWD: process.env.PWD || ''
 }
 
-mongoose.connect('mongodb://' + mongoDBDetails.UID + ':' + mongoDBDetails.PWD + '@ds133251.mlab.com:33251/hitdataexpsession');
+mongoose.connect('mongodb://' + mongoDBDetails._MONGO_UID + ':' + mongoDBDetails._MONGO_PWD + '@ds133251.mlab.com:33251/hitdataexpsession');
 var sessionStore = new MongoStore({mongooseConnection: mongoose.connection });
 	
 app.use(session({
@@ -73,7 +73,7 @@ app.get("/logout", function(req,res){
 */
 
 var getSequence = function(callBackMethods){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
 		db.collection('sensordata').find({}).toArray(function(err, result) {
 			db.close();
 			if (err) 
@@ -86,7 +86,7 @@ var getSequence = function(callBackMethods){
 
 var insertSensorData = function(data, callBackMethods){
 	console.log(data.id)
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
 		db.collection('sensordata').insert(data, function(err, result) {
 			db.close();
 			if (err) 
@@ -99,7 +99,7 @@ var insertSensorData = function(data, callBackMethods){
 
 
 var userValidatoin = function(user, callBackMethods){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133251.mlab.com:33251/hitdataexpuserdata", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133251.mlab.com:33251/hitdataexpuserdata", function(err, db) {
 		db.collection('users').findOne( user, function(err, result) {
 			db.close();
 			if (err || null == result || null == result.userId) 
@@ -112,7 +112,7 @@ var userValidatoin = function(user, callBackMethods){
 
 
 var loadsensordata = function(criteria, callBackMethods){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
 		db.collection('sensordata').find( criteria ).toArray(function(err, result) {
 			db.close();
 			if (err) 
@@ -124,7 +124,7 @@ var loadsensordata = function(criteria, callBackMethods){
 }
 
 var loadprocesseddata = function(criteria, callBackMethods){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase" , function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase" , function(err, db) {
 		db.collection(callBackMethods.tableName).find( criteria ).toArray(function(err, result) {
 			db.close();
 			if (err) 
@@ -136,7 +136,7 @@ var loadprocesseddata = function(criteria, callBackMethods){
 }
 
 var aggregatedata = function(criteria, callBackMethods){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
 		db.collection('sensordata').aggregate( criteria ).toArray(function(err, result) {
 			db.close();
 			if (err) 
@@ -148,7 +148,7 @@ var aggregatedata = function(criteria, callBackMethods){
 }
 
 var processhalldata = function(){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
 		var _mapper = function(){
 			var milis = Date.parse(this.timestamp);
 			var date = new Date(milis);
@@ -176,7 +176,7 @@ var processhalldata = function(){
 }
 
 var processmstrmdata = function(){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
 		var _mapper = function(){
 			var milis = Date.parse(this.timestamp);
 			var date = new Date(milis);
@@ -204,7 +204,7 @@ var processmstrmdata = function(){
 }
 
 var processgstrmdata = function(){
-	MongoClient.connect("mongodb://" + mongoDBDetails.UID + ":" + mongoDBDetails.PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
+	MongoClient.connect("mongodb://" + mongoDBDetails._MONGO_UID + ":" + mongoDBDetails._MONGO_PWD + "@ds133261.mlab.com:33261/hitdataexpsensordatabase", function(err, db) {
 		var _mapper = function(){
 			var milis = Date.parse(this.timestamp);
 			var date = new Date(milis);
